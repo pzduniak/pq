@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -155,6 +156,9 @@ func appendEncodedText(parameterStatus *parameterStatus, buf []byte, x interface
 	case nil:
 		return append(buf, "\\N"...)
 	case driver.Valuer:
+		if v == nil || (reflect.ValueOf(v).Kind() == reflect.Ptr && reflect.ValueOf(v).IsNil()) {
+			return append(buf, "\\N"...)
+		}
 		y, err := v.Value()
 		if err != nil {
 			errorf("encode: unknown type, conversion failed: %v", err)
