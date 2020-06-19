@@ -152,6 +152,12 @@ func appendEncodedText(parameterStatus *parameterStatus, buf []byte, x interface
 		return append(buf, formatTs(v)...)
 	case nil:
 		return append(buf, "\\N"...)
+	case driver.Valuer:
+		y, err := v.Value()
+		if err != nil {
+			errorf("encode: unknown type, conversion failed: %v", err)
+		}
+		return appendEncodedText(parameterStatus, buf, y)
 	default:
 		errorf("encode: unknown type for %T", v)
 	}
