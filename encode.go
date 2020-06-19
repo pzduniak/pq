@@ -139,6 +139,8 @@ func appendEncodedText(parameterStatus *parameterStatus, buf []byte, x interface
 	switch v := x.(type) {
 	case int64:
 		return strconv.AppendInt(buf, v, 10)
+	case uint8, uint16, uint32, uint64, int8, int16, int32:
+		return append(buf, []byte(fmt.Sprintf("%d", v))...)
 	case float64:
 		return strconv.AppendFloat(buf, v, 'f', -1, 64)
 	case []byte:
